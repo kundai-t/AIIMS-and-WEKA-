@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<Page Version="4000" TimeStamp="2021-06-06 20:00:23">
+	<PageEditSize Type="Inherited" />
+	<ProjectUUID>C42A6813-882A-410D-968C-BF26990488C8</ProjectUUID>
+	<TemplatesTabOrderPosition>1</TemplatesTabOrderPosition>
+	<Background Inherited="true" />
+	<PageObject Type="Table">
+		<Location top="72" left="54" bottom="528" right="354" />
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<ExplicitIdentifier>
+			<Identifier>temp( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="4" Decimals="0" Alignment="Center" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>windspeed( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="5" Decimals="2" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>radiance( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="5" Decimals="0" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>load( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="6" Decimals="0" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<PageObject Type="Table">
+		<Location top="78" left="396" bottom="180" right="714" />
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<ExplicitIdentifier>
+			<Identifier>num_of_batteries</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="5" Decimals="1" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>num_of_solar</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="5" Decimals="2" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>num_of_turbines</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="7" Decimals="3" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>height</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="11" Decimals="8" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>LPSP</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="11" Decimals="8" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<PageObject Type="Table">
+		<Location top="54" left="738" bottom="468" right="942" />
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<ExplicitIdentifier>
+			<Identifier>PVpower( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="5" Decimals="0" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>Energy_battery( t )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="7" Decimals="0" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<PageObject Type="Table">
+		<Location top="102" left="996" bottom="156" right="1206" />
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<ExplicitIdentifier>
+			<Identifier>ObjFunction</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="8" Decimals="0" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<UsedReferences>
+		<Model>
+			<Symbol>load</Symbol>
+			<Symbol>t</Symbol>
+			<Symbol>radiance</Symbol>
+			<Symbol>windspeed</Symbol>
+			<Symbol>temp</Symbol>
+			<Symbol>num_of_solar</Symbol>
+			<Symbol>num_of_turbines</Symbol>
+			<Symbol>num_of_batteries</Symbol>
+			<Symbol>height</Symbol>
+			<Symbol>ObjFunction</Symbol>
+			<Symbol>PVpower</Symbol>
+			<Symbol>Energy_battery</Symbol>
+			<Symbol>LPSP</Symbol>
+		</Model>
+	</UsedReferences>
+</Page>

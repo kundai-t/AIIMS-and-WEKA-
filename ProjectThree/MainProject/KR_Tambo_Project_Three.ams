@@ -1,0 +1,169 @@
+## ams_version=1.0
+
+Model Main_KR_Tambo_Project_Three {
+	Set time {
+		Index: t;
+	}
+	Parameter VAR {
+		IndexDomain: t;
+	}
+	Parameter load {
+		IndexDomain: t;
+	}
+	Parameter Ebmin {
+		Definition: 600;
+	}
+	Parameter radiance {
+		IndexDomain: t;
+	}
+	Parameter windspeed {
+		IndexDomain: t;
+	}
+	Parameter temp {
+		IndexDomain: t;
+	}
+	Variable num_of_solar {
+		Range: nonnegative;
+	}
+	Variable num_of_turbines {
+		Range: nonnegative;
+	}
+	Variable num_of_batteries {
+		Range: nonnegative;
+	}
+	Variable height {
+		Range: (0, 20);
+	}
+	Variable ObjFunction {
+		Range: free;
+	}
+	Variable PVpower {
+		IndexDomain: t | ord(t)>=1;
+		Range: free;
+	}
+	Variable windpower {
+		IndexDomain: t;
+		Range: nonnegative;
+	}
+	Variable wind_speed {
+		IndexDomain: t;
+		Range: nonnegative;
+	}
+	Variable Energy_battery {
+		IndexDomain: t;
+		Range: nonnegative;
+	}
+	Variable LPSP {
+		Range: (0, 1);
+	}
+	Constraint Obj_constraint {
+		Definition: ObjFunction = num_of_solar*(5000 + 24*50)+num_of_turbines*(67147 + 24*681.47 + height*(42169/15)+24*height*28.1127)+num_of_batteries*(1873 + 1*1873 + (24-1-1)*18.73);
+	}
+	Constraint PVpower_contsraint {
+		IndexDomain: t;
+		Definition: PVpower(t) = (23.80 - 0.1161*(temp(t) - 273))*(7.39 + 0.0044*(temp(t) - 273)+0.008*radiance(t))*(1-var(t))*num_of_solar;
+	}
+	Constraint windpower_constraint {
+		IndexDomain: t;
+		Definition: windpower(t) = (1-VAR(t))*(-1.9838*Power(Wind_Speed(t),4) + 48.719*power(Wind_Speed(t), 3) - 367.65*power(wind_speed(t), 2) + 1194.4*wind_speed(t)- 1304.5)*num_of_turbines;
+	}
+	Constraint windspeed_constraint {
+		IndexDomain: t;
+		Definition: wind_speed(t) = windspeed(t)*power(height/10, 0.2);
+	}
+	Constraint battery_constraint {
+		IndexDomain: t;
+		Definition: Energy_battery(t)= (Energy_battery(t-1)*(1-0.000041666)*(1-VAR(t)) + (1-VAR(t))*(num_of_solar*PVpower(t)+num_of_turbines*windpower(t)-(load(t))/0.80)*0.75 + num_of_batteries*Ebmin*var(t));
+	}
+	Constraint LPSP_constraint {
+		Definition: LPSP = sum[t | ord(t) >=1, load(t) - (num_of_solar*PVpower(t)+num_of_turbines*windpower(t)+ Energy_battery(t-1) - num_of_batteries*Ebmin)*0.75]/sum[ t | ord(t) >=1,load(t)];
+	}
+	Constraint LPSP_constraint2 {
+		Definition: LPSP <= 0.01;
+	}
+	Constraint EnergyBattery_constraint {
+		IndexDomain: t;
+		Definition: Energy_battery(t) >= 600;
+	}
+	MathematicalProgram ProgramModel {
+		Objective: ObjFunction;
+		Direction: minimize;
+		Constraints: AllConstraints;
+		Variables: AllVariables;
+		Type: MINLP;
+	}
+	ElementParameter gmpEelement {
+		Range: AllGeneratedMathematicalPrograms;
+	}
+	Procedure MainInitialization {
+		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
+	}
+	Procedure PostMainInitialization {
+		Comment: {
+			"Add initialization statements here that require that the libraries are already initialized properly,
+			or add statements that require the Data Management module to be initialized."
+		}
+	}
+	Procedure MainExecution {
+		Body: {
+			gmpEelement := GMP::Instance::Generate( ProgramModel );
+			
+			GMPOuterApprox::IterationMax := 15;
+			GMPOuterApprox::CreateStatusFile := 1;
+			
+			! Best known solution: 2.9250
+			
+			GMPOuterApprox::DoOuterApproximation( gmpEelement );
+		}
+	}
+	Procedure PreMainTermination {
+		Body: {
+			return DataManagementExit();
+		}
+		Comment: {
+			"Add termination statements here that require all libraries to be still alive.
+			Return 1 if you allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence."
+		}
+	}
+	Procedure MainTermination {
+		Body: {
+			return 1;
+		}
+		Comment: {
+			"Add termination statements here that do not require all libraries to be still alive.
+			Return 1 to allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence.
+			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+	Module Outer_Approximation_Module {
+		SourceFile: "%AIMMSMODULES%\\OuterApproximation.ams";
+	}
+	Module GMP_Outer_Approximation_Module {
+		SourceFile: "%AIMMSMODULES%\\GMPOuterApproximation.ams";
+		Comment: {
+			"This module contains two outer approximation algorithms for solving Mixed Integer
+			Nonlinear Problems (MINLP). The basic algorithm can be found in the section \'AOA
+			Basic Algorithm\' and is based on the following two papers:
+			
+			 M.A. Duran and I.E. Grossmann, An outer-approximation algorithm for a class of
+			 mixed-integer nonlinear programs, Mathematical Programming 36 (1986), pp. 307-339.
+			
+			 J. Viswanathan and I.E. Grossmann, A combined penalty function and outer-approximation
+			 method for MINLP optimization, Computers and Chemical Engineering 14 (1990), pp. 769-778.
+			
+			The basic algorithm can be used for convex and non-convex problems with general integer
+			variables.
+			
+			The section \'AOA Convex Algorithm\' contains a variant of the outer approximation algorithm
+			that uses a single tree search. In this way the sequential solving of several MIP\'s is
+			avoided. The algorithm is based on the paper:
+			
+			 I. Quesada and I.E. Grossmann, An LP/NLP Based Branch and Bound Algorithm for Convex MINLP
+			 Optimization Problems, Computers and Chemical Engineering 16 (1992), pp. 937-947.
+			
+			This algorithm can only be used for convex problems (with general integer variables)."
+		}
+	}
+}

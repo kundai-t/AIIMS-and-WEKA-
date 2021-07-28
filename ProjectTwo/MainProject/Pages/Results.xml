@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<Page Version="4000" TimeStamp="2021-03-19 11:45:36">
+	<PageEditSize Type="Inherited" />
+	<ProjectUUID>A2A439DF-E1C6-4A1A-876D-91C2529AA028</ProjectUUID>
+	<TemplatesTabOrderPosition>1</TemplatesTabOrderPosition>
+	<Background Inherited="true" />
+	<PageObject Type="Table">
+		<Location top="54" left="30" bottom="798" right="336" />
+		<TabOrder>2</TabOrder>
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<ExplicitIdentifier>
+			<Identifier>NumberOfUnits( j, i )</Identifier>
+			<Permutation>[1,0]</Permutation>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="4" Decimals="0" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<PageObject Type="Table">
+		<MultipleCases>true</MultipleCases>
+		<Location top="60" left="378" bottom="210" right="732" />
+		<TabOrder>1</TabOrder>
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<Border Style="InShadow" Width="2" MarginTop="5" MarginRight="5" MarginBottom="5" MarginLeft="5" />
+		<BackgroundColor RGB="#ffffff" />
+		<RowIndentation>3</RowIndentation>
+		<InactiveData>true</InactiveData>
+		<MultiLineHeaders>true</MultiLineHeaders>
+		<AllHorizontalGridLines>true</AllHorizontalGridLines>
+		<AllVerticalGridLines>true</AllVerticalGridLines>
+		<ExplicitIdentifier>
+			<Identifier>NumberOfRetrofits( j )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="5" Decimals="0" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>TotalRebate( j )</Identifier>
+			<FirstColumn>1</FirstColumn>
+			<NumberFormat Width="8" Decimals="0" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>TotalRetrofits</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="5" Decimals="0" />
+		</ExplicitIdentifier>
+		<ExplicitIdentifier>
+			<Identifier>SumAllRebates</Identifier>
+			<FirstColumn>0</FirstColumn>
+			<NumberFormat Width="8" Decimals="0" />
+		</ExplicitIdentifier>
+	</PageObject>
+	<PageObject Type="Button">
+		<Location top="78" left="774" bottom="150" right="1086" />
+		<TabOrder>5</TabOrder>
+		<LeaveOnEnter>false</LeaveOnEnter>
+		<ButtonType>Text</ButtonType>
+		<Title>"Solve Model"</Title>
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<ActionSequence>
+			<Action Type="Run">
+				<RunWhat>SpecificProcecure</RunWhat>
+				<Procedure>MainExecution</Procedure>
+				<AbortOnError>true</AbortOnError>
+			</Action>
+		</ActionSequence>
+	</PageObject>
+	<PageObject Type="Button">
+		<Location top="180" left="786" bottom="270" right="1074" />
+		<TabOrder>3</TabOrder>
+		<LeaveOnEnter>false</LeaveOnEnter>
+		<ButtonType>Text</ButtonType>
+		<Title>"Solve for 40% Increase"</Title>
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<ActionSequence>
+			<Action Type="Run">
+				<RunWhat>SpecificProcecure</RunWhat>
+				<Procedure>MainExecutionFor40Increase</Procedure>
+				<AbortOnError>true</AbortOnError>
+			</Action>
+		</ActionSequence>
+	</PageObject>
+	<PageObject Type="Button">
+		<Location top="288" left="792" bottom="360" right="1092" />
+		<TabOrder>4</TabOrder>
+		<LeaveOnEnter>false</LeaveOnEnter>
+		<ButtonType>Text</ButtonType>
+		<Title>"Solve for 20% Decrease"</Title>
+		<Font GUID="00000000-0000-0000-0000-000000000001" Name="Main Font" />
+		<ActionSequence>
+			<Action Type="Run">
+				<RunWhat>SpecificProcecure</RunWhat>
+				<Procedure>MainExecutionFor20decrease</Procedure>
+				<AbortOnError>true</AbortOnError>
+			</Action>
+			<Action Type="Run">
+				<RunWhat>SpecificProcecure</RunWhat>
+				<Procedure>MainExecutionFor20decrease</Procedure>
+				<AbortOnError>true</AbortOnError>
+			</Action>
+		</ActionSequence>
+	</PageObject>
+	<UsedReferences>
+		<Model>
+			<Symbol>NumberOfUnits</Symbol>
+			<Symbol>NumberOfRetrofits</Symbol>
+			<Symbol>TotalRetrofits</Symbol>
+			<Symbol>TotalRebate</Symbol>
+			<Symbol>SumAllRebates</Symbol>
+			<Symbol>MainExecution</Symbol>
+			<Symbol>MainExecutionFor40Increase</Symbol>
+			<Symbol>MainExecutionFor20decrease</Symbol>
+			<Symbol>j</Symbol>
+			<Symbol>i</Symbol>
+		</Model>
+	</UsedReferences>
+</Page>

@@ -1,0 +1,159 @@
+## ams_version=1.0
+
+Model Main_EEPProjectOne {
+	Set TimeSlots {
+		Index: t;
+	}
+	Set Loads {
+		Index: i;
+	}
+	Parameter KTariff {
+		IndexDomain: t;
+	}
+	Parameter BEnergy {
+		IndexDomain: i;
+	}
+	Parameter ZOnTime {
+		IndexDomain: i;
+	}
+	MathematicalProgram Min_D {
+		Objective: Total2_Cost;
+		Direction: minimize;
+		Constraints: AllConstraints;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	MathematicalProgram Min_C {
+		Objective: Part1_Cost;
+		Direction: minimize;
+		Constraints: AllConstraints;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	MathematicalProgram Min_I {
+		Objective: Total_P3;
+		Direction: minimize;
+		Constraints: AllConstraints;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	Variable F1 {
+		IndexDomain: i | ord(i) < 4;
+		Range: free;
+		Definition: sum [t, 0.5*BEnergy(i)*KTariff(t)*u(t,i)];
+	}
+	Variable InF1 {
+		IndexDomain: i | ord(i) > 3 and ord(i) < 7;
+		Range: free;
+		Definition: sum [t, 0.5*BEnergy(i)*KTariff(t)*u(t,i)];
+	}
+	Variable Night1 {
+		IndexDomain: i | ord(i) > 6;
+		Range: free;
+		Definition: sum [t, 0.5*BEnergy(i)*KTariff(t)*u(t,i)];
+	}
+	Variable u {
+		IndexDomain: (t,i);
+		Range: binary;
+	}
+	Variable F1_Cost {
+		Range: free;
+		Definition: sum[i, F1(i)];
+	}
+	Variable InF1_Cost {
+		Range: free;
+		Definition: sum [i, InF1(i)];
+	}
+	Variable Night1_Cost {
+		Range: free;
+		Definition: sum[i, Night1(i)];
+	}
+	Variable Part1_Cost {
+		Range: free;
+		Definition: F1_Cost + InF1_Cost + Night1_Cost;
+	}
+	Variable F2_Cost {
+		Range: nonnegative;
+		Definition: 0.8*F1_Cost;
+	}
+	Variable InF2_Cost {
+		Range: free;
+		Definition: 0.8*InF1_Cost;
+	}
+	Variable Night2_Cost {
+		Range: free;
+		Definition: 0.8*Night1_Cost;
+	}
+	Variable Total2_Cost {
+		Range: free;
+		Definition: F2_Cost + InF2_Cost + Night2_Cost;
+	}
+	Variable Flex_P3 {
+		Range: nonnegative;
+		Definition: 1.4*F1_Cost;
+	}
+	Variable InFlex_P3 {
+		Range: free;
+		Definition: 1.4*InF1_Cost;
+	}
+	Variable Night_P3 {
+		Range: free;
+		Definition: 1.4*Night1_Cost;
+	}
+	Variable Total_P3 {
+		Range: free;
+		Definition: Flex_P3 + InFlex_P3 + Night_P3;
+	}
+	Constraint Restrict1 {
+		IndexDomain: i | ord(i) <= 3;
+		Definition: sum[t,u(t,i)] = ZOnTime(i);
+	}
+	Constraint Restrict2 {
+		IndexDomain: i | ord(i) > 3 and ord(i) < 7;
+		Definition: sum[t,u(t,i)] >= ZOnTime(i);
+	}
+	Constraint Restrict3 {
+		IndexDomain: i | ord(i) > 6;
+		Definition: sum[t,u(t,i)] = ZOnTime(i);
+	}
+	Procedure MainInitialization {
+		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
+	}
+	Procedure PostMainInitialization {
+		Comment: {
+			"Add initialization statements here that require that the libraries are already initialized properly,
+			or add statements that require the Data Management module to be initialized."
+		}
+	}
+	Procedure MainExecution {
+		Body: {
+			showprogresswindow;
+			solve Min_C;
+			
+			if (Min_C.ProgramStatus <> 'Optimal') then
+				empty u, Part1_Cost;
+			endif;
+		}
+	}
+	Procedure PreMainTermination {
+		Body: {
+			return DataManagementExit();
+		}
+		Comment: {
+			"Add termination statements here that require all libraries to be still alive.
+			Return 1 if you allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence."
+		}
+	}
+	Procedure MainTermination {
+		Body: {
+			return 1;
+		}
+		Comment: {
+			"Add termination statements here that do not require all libraries to be still alive.
+			Return 1 to allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence.
+			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+}

@@ -1,0 +1,8 @@
+Warning at line 2 in user-defined function section "MainExecution".
+The columns "u(19,5)" and "u(38,5)" are equal in the generated mathematical program "Min_C". This may lead to non-unique solutions.  For more information regarding potential causes and consequences, see the help associated with the option "Warning_duplicate_column".
+Warning at line 2 in user-defined function section "MainExecution".
+The columns "u(37,5)" and "u(38,5)" are equal in the generated mathematical program "Min_C". This may lead to non-unique solutions.  For more information regarding potential causes and consequences, see the help associated with the option "Warning_duplicate_column".
+Warning at line 2 in user-defined function section "MainExecution".
+The columns "u(18,5)" and "u(37,5)" are equal in the generated mathematical program "Min_C". This may lead to non-unique solutions.  For more information regarding potential causes and consequences, see the help associated with the option "Warning_duplicate_column".
+Warning at line 2 in user-defined function section "MainExecution".
+Only 3 out of 387 duplicate column warnings were reported.  See also option limit_reported_duplicate_column_row_warnings.

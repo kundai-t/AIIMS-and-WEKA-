@@ -1,0 +1,12 @@
+﻿Initial
+NLP : 3.91502e+05 #         6 iterations    0.03 seconds   (CONOPT 4.1)
+
+
+
+MINLP final statistics
+----------------------
+Model status    :  Optimal
+Solver status   :  Normal completion
+Objective value :  3.915018956e+05
+Iterations      :  0
+Time (sec)      :  -7199.97

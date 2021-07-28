@@ -1,0 +1,15 @@
+Semantic error at line 1 in the definition of constraint "windpower_constraint", column 157.
+The identifier "Num_Turbine" has not been declared.
+The mandatory attribute "range" is missing from element parameter "gmpElement".
+Semantic error at line 1 in user-defined function section "MainExecution", column 54.
+An expression with data type element(AllGeneratedMathematicalPrograms) cannot assigned to the element parameter "gmpElement" with range set "time".
+Semantic error at line 1 in user-defined function section "MainExecution", column 54.
+An expression with data type element(AllGeneratedMathematicalPrograms) cannot assigned to the element parameter "gmpElement" with range set "time".
+Semantic error at line 3 in user-defined function section "MainExecution", column 1.
+The identifier "GMPOuterApprox" has not been declared.
+Semantic error at line 3 in user-defined function section "MainExecution", column 1.
+The identifier "GMPOuterApprox" has not been declared.
+Warning at line 1 in user-defined function section "MainExecution".
+The parameter "VAR" is not initialized (default values are used).
+Warning at line 1 in the type of mathematical program "ProgramModel".
+The model class MINLP is not appropriate to solve mathematical program "ProgramModel": there are no integralities (integer variables or SOS constraints); the class NLP may be more appropriate because of non-linear terms.

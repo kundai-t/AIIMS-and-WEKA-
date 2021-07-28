@@ -1,0 +1,182 @@
+## ams_version=1.0
+
+Model Main_RetrofitingProject2 {
+	Set customers_J {
+		Index: j;
+	}
+	Set techcount_I {
+		Index: i;
+	}
+	Variable NumberOfUnits {
+		IndexDomain: (j,i);
+		Range: free;
+	}
+	Variable ObjectiveFunction {
+		Range: free;
+		Definition: sum[ (j,i), (NumberOfUnits(j,i) * (RebatePaid(i) - CostForReplacing(i))) + (365 * NumberOfUnits(j,i) * DailyHours(j) * PowerSaved(i) * Tarrif(j))];
+	}
+	Variable ObjectiveFunction40Increase {
+		Range: free;
+		Definition: sum[ (j,i),(NumberOfUnits(j,i) * (RebatePaid(i) - 1.4*CostForReplacing(i))) + (365 * NumberOfUnits(j,i)* DailyHours(j) * PowerSaved(i) * Tarrif(j))];
+	}
+	Variable ObjectiveFunction20Decrease {
+		Range: free;
+		Definition: sum[ (j,i),( NumberOfUnits(j,i) * (RebatePaid(i) - 0.8*CostForReplacing(i))) + (365 * NumberOfUnits(j,i)* DailyHours(j) * PowerSaved(i) * Tarrif(j))];
+	}
+	Variable NumberOfRetrofits {
+		IndexDomain: j;
+		Range: free;
+		Definition: sum[i,NumberOfUnits(j,i)];
+	}
+	Variable TotalRetrofits {
+		Range: free;
+		Definition: sum[j,NumberOfRetrofits(j)];
+	}
+	Variable TotalRebate {
+		IndexDomain: j;
+		Range: free;
+		Definition: sum[i,NumberOfUnits(j,i)*RebatePaid(i)];
+	}
+	Variable SumAllRebates {
+		Range: free;
+		Definition: sum[j,TotalRebate(j)];
+	}
+	MathematicalProgram MaximizeBenefitsForCustomer {
+		Objective: ObjectiveFunction;
+		Direction: maximize;
+		Constraints: InitialConditions;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	MathematicalProgram Increase40MaximumBenefits {
+		Objective: ObjectiveFunction40Increase;
+		Direction: maximize;
+		Constraints: Increase40Constraints;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	MathematicalProgram Decrease20MaximumBenefits {
+		Objective: ObjectiveFunction20Decrease;
+		Direction: maximize;
+		Constraints: Decrease20Constraints;
+		Variables: AllVariables;
+		Type: Automatic;
+	}
+	Parameter RebatePaid {
+		IndexDomain: i;
+	}
+	Parameter NumberOfMinUnits {
+		IndexDomain: j;
+	}
+	Parameter NumberOfMaxUnits {
+		IndexDomain: j;
+	}
+	Parameter CostForReplacing {
+		IndexDomain: i;
+	}
+	Parameter PowerSaved {
+		IndexDomain: i;
+	}
+	Parameter Tarrif {
+		IndexDomain: j;
+	}
+	Parameter DailyHours {
+		IndexDomain: j;
+	}
+	Parameter MaxCustomerAmt {
+		IndexDomain: j;
+	}
+	Constraint Contraint1 {
+		IndexDomain: j;
+		Definition: sum[i, NumberOfUnits(j,i) * RebatePaid(i) ] <= 750000;
+	}
+	Constraint Constraint2 {
+		IndexDomain: j;
+		Definition: sum[i, NumberOfUnits(j,i)*CostForReplacing(i)] <= MaxCustomerAmt(j);
+	}
+	Constraint Constraint3 {
+		IndexDomain: j;
+		Definition: 1000 <= sum[i, NumberOfUnits(j,i)*PowerSaved(i)] <= 250000;
+	}
+	Constraint Constraint4 {
+		IndexDomain: j;
+		Definition: sum[i,365*NumberOfUnits(j,i)*DailyHours(j)*PowerSaved(i)] >= 2000000;
+	}
+	Constraint Constraint5 {
+		IndexDomain: (j,i);
+		Definition: NumberOfMinUnits(j) <= NumberOfUnits(j,i) <= NumberOfMaxUnits(j);
+	}
+	Constraint Increase40Constraint {
+		IndexDomain: j;
+		Definition: sum[i, NumberOfUnits(j,i)*CostForReplacing(i) * 1.4 ] <= MaxCustomerAmt(j);
+	}
+	Constraint Decrease20Constraint {
+		IndexDomain: j;
+		Definition: sum[i, NumberOfUnits(j,i)*CostForReplacing(i) * 0.8] <= MaxCustomerAmt(j);
+	}
+	Set InitialConditions {
+		SubsetOf: AllConstraints;
+	}
+	Set Decrease20Constraints {
+		SubsetOf: AllConstraints;
+	}
+	Set Increase40Constraints {
+		SubsetOf: AllConstraints;
+	}
+	Procedure MainInitialization {
+		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
+	}
+	Procedure PostMainInitialization {
+		Comment: {
+			"Add initialization statements here that require that the libraries are already initialized properly,
+			or add statements that require the Data Management module to be initialized."
+		}
+	}
+	Procedure MainExecution {
+		Body: {
+			solve MaximizeBenefitsForCustomer;
+			if(MaximizeBenefitsForCustomer.ProgramStatus<> 'Optimal')then
+			
+			   empty NumberOfUnits;
+			endif;
+		}
+	}
+	Procedure MainExecutionFor40Increase {
+		Body: {
+			solve Increase40MaximumBenefits;
+			if( Increase40MaximumBenefits.ProgramStatus<> 'Optimal')then
+			   empty NumberOfUnits;
+			endif;
+		}
+	}
+	Procedure MainExecutionFor20decrease {
+		Body: {
+			solve Decrease20MaximumBenefits;
+			if(Decrease20MaximumBenefits.ProgramStatus<> 'Optimal')then
+			
+			   empty NumberOfUnits;
+			endif;
+		}
+	}
+	Procedure PreMainTermination {
+		Body: {
+			return DataManagementExit();
+		}
+		Comment: {
+			"Add termination statements here that require all libraries to be still alive.
+			Return 1 if you allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence."
+		}
+	}
+	Procedure MainTermination {
+		Body: {
+			return 1;
+		}
+		Comment: {
+			"Add termination statements here that do not require all libraries to be still alive.
+			Return 1 to allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence.
+			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+}
